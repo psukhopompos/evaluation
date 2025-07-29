@@ -3,266 +3,423 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Estate Listing Comparison</title>
+    <title>Real Estate Listing Evolution - V3 AI Optimization</title>
     <style>
         /* --- Basic Setup & Typography --- */
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f7f9;
-            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            color: #2c3e50;
             margin: 0;
             padding: 20px;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-        }
-
-        h1, h2, h3, h4 {
-            color: #1a2533;
-            font-weight: 600;
         }
 
         h1 {
             text-align: center;
             margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #1a202c;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .evolution-indicator {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .evolution-step {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .evolution-step .label {
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .evolution-step.human .label {
+            background: #3b82f6;
+        }
+
+        .evolution-step.ai-v2 .label {
+            background: #10b981;
+        }
+
+        .evolution-step.ai-v3 .label {
+            background: #8b5cf6;
+        }
+
+        .evolution-arrow {
+            color: #94a3b8;
+            font-size: 1.5em;
         }
 
         p.intro {
             text-align: center;
-            color: #555;
-            max-width: 800px;
+            color: #64748b;
+            max-width: 900px;
             margin: 0 auto 40px auto;
+            font-size: 1.1em;
+            line-height: 1.8;
         }
 
         /* --- Property Card Styling --- */
         .property-card {
             background-color: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
-            overflow: hidden; /* Ensures child elements respect the border radius */
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 50px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         /* --- Property Details (Raw Data) Section --- */
         .property-details {
-            padding: 20px 25px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .property-details h2 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            color: #005a9c;
+            margin: 0 0 20px 0;
+            color: #1e293b;
+            font-size: 1.8em;
+            font-weight: 600;
         }
 
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px 30px;
         }
 
         .details-grid p {
             margin: 0;
-            font-size: 0.95em;
-            color: #444;
+            color: #475569;
+            font-size: 1.05em;
         }
 
-        .details-grid p strong {
+        .details-grid strong {
+            color: #334155;
             font-weight: 600;
-            color: #1a2533;
         }
 
-        /* --- Comparison Section (Human vs AI) --- */
-        .comparison-container {
-            display: flex;
-            flex-direction: row;
-            gap: 0; /* No gap, borders will separate */
+        /* --- Listings Container --- */
+        .listings-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 0;
         }
 
+        /* --- Individual Listing Column --- */
         .listing-column {
-            flex: 1; /* Each column takes up equal space */
-            padding: 20px 25px;
-            min-width: 0; /* Fix for flexbox text overflow */
+            padding: 30px;
+            position: relative;
         }
 
-        .listing-column:first-child {
-            border-right: 1px solid #e0e0e0;
+        .listing-column:not(:last-child) {
+            border-right: 1px solid #e5e7eb;
         }
 
         .listing-column h3 {
-            margin-top: 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid;
+            margin: 0 0 20px 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .column-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        /* --- Listing Specific Styling --- */
+        .human-listing h3 {
+            color: #3b82f6;
+        }
+
+        .human-listing .column-icon {
+            background: #3b82f6;
+        }
+
+        .ai-v2-listing h3 {
+            color: #10b981;
+        }
+
+        .ai-v2-listing .column-icon {
+            background: #10b981;
+        }
+
+        .ai-v3-listing h3 {
+            color: #8b5cf6;
+        }
+
+        .ai-v3-listing .column-icon {
+            background: #8b5cf6;
+        }
+
+        /* --- Listing Content --- */
+        .listing-content {
+            color: #374151;
+            line-height: 1.8;
+        }
+
+        .listing-content p {
+            margin: 0 0 15px 0;
+        }
+
+        .listing-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- Word Count Badge --- */
+        .word-count {
+            margin-top: 20px;
+            padding: 8px 12px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: #6b7280;
+            font-weight: 500;
             display: inline-block;
         }
 
-        .human-listing h3 {
-            border-color: #007bff; /* Blue for Human */
-        }
-
-        .ai-listing h3 {
-            border-color: #28a745; /* Green for AI */
-        }
-        
-        .listing-column p {
-            margin: 0;
-        }
-
-        /* --- Responsive Design for Mobile --- */
-        @media (max-width: 800px) {
-            body {
-                padding: 10px;
+        /* --- Responsive Design --- */
+        @media (max-width: 1200px) {
+            .listings-container {
+                grid-template-columns: 1fr;
             }
-            .comparison-container {
-                flex-direction: column;
-            }
-
-            .listing-column:first-child {
+            
+            .listing-column:not(:last-child) {
                 border-right: none;
-                border-bottom: 1px solid #e0e0e0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .evolution-indicator {
+                gap: 10px;
+            }
+            
+            .evolution-step {
+                font-size: 0.95em;
+            }
+            
+            .property-details {
+                padding: 20px;
+            }
+            
+            .listing-column {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>Real Estate Listing Description Comparison</h1>
+        <h1>The Property Chronicler: AI Evolution</h1>
+        
+        <div class="evolution-indicator">
+            <div class="evolution-step human">
+                <span class="label">Human Written</span>
+            </div>
+            <span class="evolution-arrow">→</span>
+            <div class="evolution-step ai-v2">
+                <span class="label">V2 Optimized</span>
+            </div>
+            <span class="evolution-arrow">→</span>
+            <div class="evolution-step ai-v3">
+                <span class="label">V3 Full Data</span>
+            </div>
+        </div>
+
         <p class="intro">
-            This page compares property descriptions written by a human real estate agent against descriptions generated by an AI. Each property includes the source data used to generate the listings.
+            This page demonstrates the evolution of our AI listing generation through V3, which now incorporates ALL available property data including amenities, room dimensions, basement details, and agent remarks.
         </p>
 
-        <!-- PROPERTY 1 -->
+        <!-- Property 1: New Brighton -->
         <div class="property-card">
             <div class="property-details">
-                <h2>Contemporary Home in New Brighton, MN</h2>
+                <h2>Contemporary Home in New Brighton</h2>
                 <div class="details-grid">
+                    <p><strong>Price:</strong> $439,900</p>
                     <p><strong>Beds:</strong> 3</p>
                     <p><strong>Baths:</strong> 3</p>
-                    <p><strong>Sq. Ft.:</strong> 2,450</p>
-                    <p><strong>Lot Size:</strong> 0.33 Acres</p>
-                    <p><strong>Year Built:</strong> 1988</p>
-                    <p><strong>Property Type:</strong> Single Family</p>
+                    <p><strong>Sq. Ft.:</strong> 2,376</p>
+                    <p><strong>Lot Size:</strong> 0.37 Acres</p>
+                    <p><strong>Year Built:</strong> 1986</p>
+                    <p><strong>Key Features:</strong> Fully finished basement, vaulted ceilings, fireplace, deck, $0 HOA</p>
                 </div>
             </div>
-            <div class="comparison-container">
+            <div class="listings-container">
                 <div class="listing-column human-listing">
-                    <h3>Human-Written Listing</h3>
-                    <p>No ordinary two-story home! This striking contemporary home with exceptional curb appeal will captivate you from the moment you arrive. Set on a private, fenced lot surrounded by mature trees, offering seclusion and scenic nature views. Inside, a spacious floor plan welcomes you with large a foyer that opens into an open living and dining room featuring wood flooring. The large kitchen, equipped with stainless steel appliances, serves as the central hub. Adjacent to the kitchen, the vaulted main-floor family room is a cozy retreat, complete with a floor-to-ceiling gas fireplace, brick accents, hearth, and flanked by large windows. Sliding doors lead out to a massive patio and deck, creating an ideal transition between indoor and outdoor living. The upper level boasts three bedrooms. The primary bedroom offers a standout custom paneled wall, a private vanity area with built-in cabinetry, a walk-in closet, a second closet, and a walk-through to a nicely updated full bathroom - modernized with new maple cabinetry, a granite vanity top, and a shower featuring subway and glass tile accents. The lower level offers an amusement room with the potential to add a fourth bedroom. This level also includes a 3/4 bathroom, a large walk-in storage closet, and a spacious laundry/mechanical room. Additional features include a concrete driveway, attic storage accessible via a drop-down ladder in the garage, and so much more. Set in a highly desirable area, this home is near parks, lakes, scenic trails, schools, restaurants, and offers easy freeway access—all within the Mounds View School District!</p>
+                    <h3><span class="column-icon">1</span>Human Written Listing</h3>
+                    <div class="listing-content">
+                        <p>Welcome to this charming 3-bedroom, 3-bathroom home nestled on a beautiful 0.37-acre lot in New Brighton! This well-maintained property boasts 2,376 square feet of finished living space perfect for comfortable family living.</p>
+                        <p>The main level features hardwood floors, vaulted ceilings, and a cozy fireplace in the living room. The kitchen includes modern appliances and opens to the dining area. Step outside to enjoy the deck overlooking your private backyard.</p>
+                        <p>The fully finished basement with egress windows adds valuable living space and could serve as a family room, home office, or recreation area. Additional highlights include a 2-car garage, brick and vinyl exterior, and mature trees providing shade and privacy.</p>
+                        <p>Located in a quiet neighborhood with no association fees, this home offers the perfect blend of comfort and value. Don't miss this opportunity!</p>
+                    </div>
+                    <div class="word-count">Word count: 131</div>
                 </div>
-                <div class="listing-column ai-listing">
-                    <h3>AI-Generated Listing</h3>
-                    <p>A dramatic, two-story family room, defined by a soaring vaulted ceiling and anchored by a gas fireplace, forms the heart of this New Brighton residence. This light-filled central gathering space establishes an immediate sense of volume and character, flowing into a well-appointed kitchen and both formal and informal dining areas. This thoughtful layout provides a versatile setting for both sophisticated entertaining and comfortable daily life. Hardwood floors and paneled doors add a layer of classic detail throughout the main level. The upper level is a private retreat, hosting three bedrooms, including a primary suite with a generous walk-in closet. Further enhancing the home’s appeal is a sprawling lower-level recreation room, offering a flexible canvas for media, fitness, or play. The living experience extends outdoors to a sequence of distinct spaces, from a welcoming front porch to a large deck and an expansive patio, creating an ideal platform for seasonal enjoyment. With its intelligent separation of spaces and significant architectural volume, this property offers a complete and refined living experience.</p>
+                <div class="listing-column ai-v2-listing">
+                    <h3><span class="column-icon">2</span>V2 Optimized Listing</h3>
+                    <div class="listing-content">
+                        <p>This New Brighton home offers nearly 2,400 square feet of finished space, thoughtfully arranged into two distinct living zones. This functional design provides exceptional flexibility for both daily family life and entertaining.</p>
+                        <p>The main level showcases the home's quality construction through its vaulted ceilings and hardwood floors. The fireplace creates a natural gathering point in the living room, while the kitchen's layout encourages conversation between cooking and dining areas. Three bedrooms and three full bathrooms eliminate morning bottlenecks and accommodate guests comfortably.</p>
+                        <p>The fully finished basement with egress windows represents a significant asset. This isn't just storage space – it's a legitimate lower level that functions as a family room, play area, or home office. The walk-up attic adds another dimension of storage rarely found in homes of this era.</p>
+                        <p>Outside, the 0.37-acre lot provides genuine privacy without overwhelming maintenance. The deck connects indoor and outdoor living naturally. Perhaps most compelling: zero association fees mean you control your property decisions and save thousands annually.</p>
+                        <p>At $439,900, this property delivers exceptional square footage and functionality in a market where finished basements and three full baths command premium prices.</p>
+                    </div>
+                    <div class="word-count">Word count: 190</div>
+                </div>
+                <div class="listing-column ai-v3-listing">
+                    <h3><span class="column-icon">3</span>V3 Full Data Listing</h3>
+                    <div class="listing-content">
+                        <p>A family home needs more than just bedrooms; it needs distinct living zones where everyone can find their own space. This property on Robin Lane is designed around that principle, offering a level of function and volume that is immediately apparent.</p>
+                        <p>On the main level, vaulted ceilings create an open atmosphere, especially in the 15x12 living room, which is anchored by a central fireplace. You'll find durable hardwood floors and classic paneled doors, details that speak to the home's solid 1986 construction. The exterior combines brick and vinyl, providing a low-maintenance and lasting finish. From the main living area, you have easy access to a deck, which steps down to a patio and a yard with medium tree coverage.</p>
+                        <p>The fully finished basement is where this home truly expands. With proper egress windows, it's a legitimate and safe lower level, not just a converted storage area. This space functions as a second family room, a dedicated play zone, or a media room, effectively doubling your usable living area.</p>
+                        <p>For storage, a walk-up attic provides a practical and accessible solution that many homes lack. It's a significant bonus for keeping seasonal items organized and out of the way. A two-car garage handles vehicles and tools. Critically, there is no association fee. This provides a tangible financial saving every month and gives you more control over your property. It's a complete package offering space, function, and long-term value.</p>
+                    </div>
+                    <div class="word-count">Word count: 236</div>
                 </div>
             </div>
         </div>
 
-        <!-- PROPERTY 2 -->
+        <!-- Property 2: Prior Lake Golf Course -->
         <div class="property-card">
             <div class="property-details">
-                <h2>Updated Multi-Level in Anoka, MN</h2>
+                <h2>Golf Course Estate in Prior Lake</h2>
                 <div class="details-grid">
-                    <p><strong>Beds:</strong> 4</p>
-                    <p><strong>Baths:</strong> 2</p>
-                    <p><strong>Sq. Ft.:</strong> 2,200</p>
-                    <p><strong>Lot Size:</strong> 0.39 Acres</p>
-                    <p><strong>Year Built:</strong> 1992</p>
-                    <p><strong>Property Type:</strong> Single Family</p>
+                    <p><strong>Price:</strong> $975,000</p>
+                    <p><strong>Beds:</strong> 6</p>
+                    <p><strong>Baths:</strong> 5</p>
+                    <p><strong>Sq. Ft.:</strong> 5,800+</p>
+                    <p><strong>Lot Size:</strong> Golf Course</p>
+                    <p><strong>Year Built:</strong> Premium</p>
+                    <p><strong>Key Features:</strong> Panoramic golf/lake views, main floor primary, walkout basement, hot tub</p>
                 </div>
             </div>
-            <div class="comparison-container">
+            <div class="listings-container">
                 <div class="listing-column human-listing">
-                    <h3>Human-Written Listing</h3>
-                    <p>What a setting for this beautifully cared for and updated 4-bedroom, 2-bath home - where comfort and style meet. This Four Level homes floor plan is unique and exudes details at every turn. An open and vaulted Living Room shares the main floor with the sun lit kitchen. The kitchen is a place to gather and create with its large island under skylights, quartz countertops, and tons of cabinetry. The living room’s vaulted ceilings and rustic hardwood floors create such a warm and inviting space. The upper level shares 3 bedrooms and a renovated bath, overlooking the vaulted main floor living area. With newer windows, furnace, water heater, and water softener, you’re moving into a home that’s not only been well-loved but cared for. The heated, insulated garage is ready for your projects or storage. Outside, the backyard is your private retreat. Fully fenced and landscaped with mature trees, it features a soothing water feature, two sheds, and a screened-in porch that’s perfect for unwinding. There’s even extra asphalt space for your trailer or boat.</p>
+                    <h3><span class="column-icon">1</span>Human Written Listing</h3>
+                    <div class="listing-content">
+                        <p>Stunning luxury home on The Wilds golf course! This magnificent 6-bedroom, 5-bathroom estate offers breathtaking panoramic views of the golf course and lake. Over 5,800 square feet of exceptional living space.</p>
+                        <p>The main floor features a convenient primary suite, spacious living areas with hardwood floors, and two fireplaces. The gourmet kitchen includes a center island perfect for entertaining. Natural woodwork throughout adds warmth and elegance.</p>
+                        <p>The finished walkout basement is an entertainer's dream with exercise room, second fireplace, and direct access to the deck and hot tub. Six bedrooms provide space for family and guests.</p>
+                        <p>Additional features include a 3-car garage and membership in The Wilds community. This is resort-style living at its finest!</p>
+                    </div>
+                    <div class="word-count">Word count: 113</div>
                 </div>
-                <div class="listing-column ai-listing">
-                    <h3>AI-Generated Listing</h3>
-                    <p>This thoughtfully designed multi-level residence is situated on a generous, private .39-acre lot, offering a unique separation of spaces for both quiet living and social engagement. The main level is distinguished by vaulted ceilings and a skylight, creating an open and light-filled environment. Hardwood floors and natural woodwork add warmth to the interior, which centers around a well-appointed kitchen with a large center island. The lower level provides a comfortable retreat, anchored by a gas fireplace and offering walkout access to the grounds. The home’s connection to its setting is exceptional, featuring a seamless transition to a variety of outdoor spaces. An expansive screened porch provides a three-season room for relaxation, which steps out to a large patio designed for entertaining. The entire backyard is enclosed by a privacy fence, creating a secluded sanctuary framed by mature trees. A heated and insulated two-car garage is a practical and welcome amenity, adding to the home's considerable comfort and year-round appeal.</p>
+                <div class="listing-column ai-v2-listing">
+                    <h3><span class="column-icon">2</span>V2 Optimized Listing</h3>
+                    <div class="listing-content">
+                        <p>Positioned on The Wilds golf course, this home commands unobstructed western views that transform throughout the day. From sunrise practice rounds to sunset reflections on the lake, the panoramic vistas become part of your daily experience.</p>
+                        <p>The 5,800 square feet is configured intelligently. A main floor primary suite eliminates stairs from your daily routine – a feature that proves invaluable over time. Two fireplaces create distinct gathering zones, while hardwood floors and natural woodwork provide the durability expected at this level.</p>
+                        <p>The finished walkout basement functions as a second home within your home. The exercise room keeps fitness convenient, while direct access to the deck and hot tub creates seamless indoor-outdoor flow. Six bedrooms and five bathrooms accommodate large families and frequent guests without compromise.</p>
+                        <p>The three-car garage handles vehicles plus golf equipment storage. As part of The Wilds community, you're buying into a lifestyle that includes championship golf and community standards that protect your investment.</p>
+                        <p>At $975,000, you're acquiring both a substantial home and a front-row seat to one of the region's premier golf experiences.</p>
+                    </div>
+                    <div class="word-count">Word count: 182</div>
+                </div>
+                <div class="listing-column ai-v3-listing">
+                    <h3><span class="column-icon">3</span>V3 Full Data Listing</h3>
+                    <div class="listing-content">
+                        <p>The view from this home isn't just an amenity; it's the backdrop for every part of your day. Positioned along Wilds Parkway, you get unobstructed, panoramic western views that stretch across the golf course and to the lake beyond. This is a dynamic landscape that changes with the light and the seasons.</p>
+                        <p>The home's architecture is designed to embrace this setting. A main floor primary suite offers the convenience of single-level living, a practical and sought-after feature that provides long-term flexibility. The main living room, a generous 22 by 15 feet, is anchored by one of two fireplaces, with hardwood floors and natural woodwork providing a classic, durable foundation. The kitchen, with its center island, is positioned to stay connected with the main living areas.</p>
+                        <p>With over 5,800 square feet, six bedrooms, and five bathrooms, the home has the capacity for large families and guests. The finished walkout basement is a key component, acting as a second living hub. It features proper daylight and egress windows, the second fireplace, and an exercise room. This level flows directly to the outdoor deck and hot tub, creating a functional link between indoor recreation and the course-side setting.</p>
+                        <p>A three-car garage provides the necessary space for vehicles and golf equipment. This property is fully integrated into the lifestyle of The Wilds community, with an association that maintains the area's high standards. It's a rare combination of expansive space, an intelligent layout, and a premier location.</p>
+                    </div>
+                    <div class="word-count">Word count: 242</div>
                 </div>
             </div>
         </div>
 
-        <!-- PROPERTY 3 -->
+        <!-- Property 3: Prior Lake Estate -->
         <div class="property-card">
             <div class="property-details">
-                <h2>Saddlebrook Neighborhood Home in Chanhassen, MN</h2>
+                <h2>Luxury Pool Estate in Prior Lake</h2>
                 <div class="details-grid">
-                    <p><strong>Beds:</strong> 4</p>
-                    <p><strong>Baths:</strong> 3</p>
-                    <p><strong>Sq. Ft.:</strong> 2,600</p>
-                    <p><strong>Lot Size:</strong> 0.35 Acres</p>
-                    <p><strong>Year Built:</strong> 1995</p>
-                    <p><strong>Property Type:</strong> Single Family</p>
+                    <p><strong>Price:</strong> $1,575,000</p>
+                    <p><strong>Beds:</strong> 6</p>
+                    <p><strong>Baths:</strong> 4</p>
+                    <p><strong>Sq. Ft.:</strong> 5,015</p>
+                    <p><strong>Lot Size:</strong> 1.88 Acres</p>
+                    <p><strong>Year Built:</strong> Luxury Estate</p>
+                    <p><strong>Key Features:</strong> Heated pool, 3 fireplaces, sunroom, walkout basement, private lot</p>
                 </div>
             </div>
-            <div class="comparison-container">
+            <div class="listings-container">
                 <div class="listing-column human-listing">
-                    <h3>Human-Written Listing</h3>
-                    <p>Located in Chanhassen in the Saddlebrook neighborhood, this home offers comfort and practicality. The main level features vaulted ceilings with maple hardwood floors that flow through the entry, living, and dining areas. The kitchen is well equipped with oak cabinets and stainless steel appliances, and plenty of counter space, and a dinette/dining area. 3 bedrooms in the upper level including a master bedroom with walk-in closet and private 3/4 bath, while two additional bedrooms are bright and spacious! An additional full updated bath helps complete this clean upper level. The lower level family room with center fireplace will be a hit for any lifestyle. Pine cabinetry, loads of storage, and great flow! Also on this floor you enter from the garage to a large laundry area and 3/4 bath. The 4th level adds another bedroom, but with so many other uses as well. Large storage and mechanical room. The property spans 0.35 acres, featuring mature landscaping, an oversized deck and party sized patios!. The 2-car garage with epoxy floors and a great parking pad adds options. Conveniently located near Lake Ann Park, walking trails and community amenities, this home is both a retreat and a hub for everyday life.</p>
+                    <h3><span class="column-icon">1</span>Human Written Listing</h3>
+                    <div class="listing-content">
+                        <p>Exceptional estate home in prestigious Legends Club! This stunning property sits on nearly 2 acres of private grounds and offers resort-style living with a heated in-ground pool.</p>
+                        <p>The 5,000+ square foot home features 6 bedrooms, 4 bathrooms, and 3 fireplaces throughout. The kitchen includes a center island and opens to a bright sunroom. Multiple living areas provide space for entertaining and daily life.</p>
+                        <p>The finished walkout basement leads directly to the pool area and expansive patio - perfect for summer gatherings. The property includes mature trees for privacy and a 3-car garage.</p>
+                        <p>This is a rare opportunity to own a private oasis in one of Prior Lake's most exclusive neighborhoods!</p>
+                    </div>
+                    <div class="word-count">Word count: 110</div>
                 </div>
-                <div class="listing-column ai-listing">
-                    <h3>AI-Generated Listing</h3>
-                    <p>Set within the desirable Saddlebrook neighborhood, this residence is defined by a dynamic, multi-level design that articulates distinct zones for living and entertaining. The main level is distinguished by vaulted ceilings that create an immediate sense of volume and light, enhanced by hardwood floors, natural woodwork, and elegant French doors. This thoughtful composition of materials lends a feeling of warmth and established character to the home. The lower level offers a comfortable retreat, centered around a welcoming family room with a gas fireplace that provides a cozy, intimate atmosphere for relaxation. The home’s design thoughtfully integrates with its verdant, .35-acre setting. A walkout from the lower level provides a seamless transition to a series of outdoor terraces, including an expansive deck and multiple patios. This suite of exterior spaces offers a private and versatile platform for large-scale entertaining or quiet enjoyment amidst the mature trees. The property successfully balances the privacy of its generous lot with a floor plan that is both functional and architecturally engaging, creating a complete and inviting living experience.</p>
+                <div class="listing-column ai-v2-listing">
+                    <h3><span class="column-icon">2</span>V2 Optimized Listing</h3>
+                    <div class="listing-content">
+                        <p>The heated in-ground pool defines summer at this Legends Club estate. Positioned on 1.88 private acres, the property creates its own resort atmosphere where pool parties and quiet evening swims become part of your routine.</p>
+                        <p>Inside 5,015 square feet, the home layers comfort throughout. Three fireplaces establish distinct zones – from formal gatherings to intimate family evenings. The kitchen's center island naturally draws people together, while the adjoining sunroom bathes breakfast in natural light. Six bedrooms and four bathrooms mean hosting extended family feels effortless, not cramped.</p>
+                        <p>The finished walkout basement brilliantly connects to the pool area, creating seamless flow between indoor entertainment and outdoor recreation. This isn't just a basement – it's your private clubhouse opening directly to summer fun.</p>
+                        <p>Mature trees create natural privacy screens across the property. The three-car garage plus dedicated mudroom handle the logistics of active family life. Within Legends Club, you're part of an established community that maintains exceptional standards.</p>
+                        <p>At $1,575,000, you're investing in a true estate property where the pool, privacy, and prestigious address create lasting value.</p>
+                    </div>
+                    <div class="word-count">Word count: 176</div>
                 </div>
-            </div>
-        </div>
-
-        <!-- PROPERTY 4 -->
-        <div class="property-card">
-            <div class="property-details">
-                <h2>End-Unit Townhome in Lakeville, MN</h2>
-                <div class="details-grid">
-                    <p><strong>Beds:</strong> 2</p>
-                    <p><strong>Baths:</strong> 2</p>
-                    <p><strong>Sq. Ft.:</strong> 1,500</p>
-                    <p><strong>Year Built:</strong> 2005</p>
-                    <p><strong>Property Type:</strong> Townhome</p>
-                </div>
-            </div>
-            <div class="comparison-container">
-                <div class="listing-column human-listing">
-                    <h3>Human-Written Listing</h3>
-                    <p>Meticulously maintained one level living. This two bedroom and two bathroom townhome is located at the edge of the development, offering the privacy of a single family home while enjoying low maintenance living! Freshly painted and new carpet make this move-in ready.</p>
-                </div>
-                <div class="listing-column ai-listing">
-                    <h3>AI-Generated Listing</h3>
-                    <p>Located within the desirable Orchard Meadows community, this end-unit residence offers a lifestyle of refined simplicity and comfort. The home is distinguished by its thoughtful single-level design, creating an environment of effortless accessibility and seamless flow throughout its 1,500 square feet. The position as an end unit affords both enhanced privacy and an infusion of natural light that brightens the entire home. The interior layout includes two bedrooms and two full baths, providing a complete and comfortable living arrangement. A distinct feature of this home is the versatile, light-filled sunroom, which serves as a tranquil sanctuary for year-round enjoyment. This dedicated space offers a peaceful retreat for reading, creative pursuits, or simply appreciating the surroundings. The exterior, with its brick and stone accents, adds a touch of enduring character. Complemented by an attached two-car garage and the convenience of association-managed exterior maintenance, this property presents a compelling opportunity for those seeking a graceful, low-maintenance lifestyle without compromising on space or light.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROPERTY 5 -->
-        <div class="property-card">
-            <div class="property-details">
-                <h2>Private Cul-de-Sac Home in Andover, MN</h2>
-                <div class="details-grid">
-                    <p><strong>Beds:</strong> 4</p>
-                    <p><strong>Baths:</strong> 3</p>
-                    <p><strong>Sq. Ft.:</strong> 3,100</p>
-                    <p><strong>Lot Size:</strong> 2.58 Acres</p>
-                    <p><strong>Year Built:</strong> 2015</p>
-                    <p><strong>Property Type:</strong> Single Family</p>
-                </div>
-            </div>
-            <div class="comparison-container">
-                <div class="listing-column human-listing">
-                    <h3>Human-Written Listing</h3>
-                    <p>BACK ON MARKET!!! Buyers financing fell through! Buyers and buyers agent to verify all information and measurements! Welcome to this wonderful 2 story on a beautiful private 2.58 acre lot in Andover!! This great home is nestled at the end of a private cul de sac. Upon entering entering the home, you will find new carpet and fresh paint, a lovely flex room off the foyer and a great sized living room open to the beautiful kitchen. The kitchen has all custom white cabinets with unique spice pullout drawers by microwave, white quartz counters, stainless steel appliances, and a nice size corner pantry! Main floor also has nice mudroom, 1/2 bath, and laundry room and a door to the oversized 3 car garage. The upper level has 4 bedrooms, to include a lovely master suite with a huge master bath and generous sized master closet. 3 other nice sized bedrooms a full bath and a smaller loft space that a desk or chair and bookshleves could complete the upper level. The lower level is unfinished and waiting for your great design! The lower level walks out to the very private backyard. The yard has privacy fence in the front and the 2 sides and back have a wire fence. Come and see this home today as it can accommodate a quick closing!</p>
-                </div>
-                <div class="listing-column ai-listing">
-                    <h3>AI-Generated Listing</h3>
-                    <p>Sited at the end of a private cul-de-sac, this residence is a sanctuary nestled within a heavily wooded 2.58-acre parcel. The home’s two-story design is complemented by brick and stone accents, creating a dignified presence in its natural setting. The main level is designed for modern living, featuring an open-concept layout grounded by a meticulously appointed kitchen. This culinary space serves as the heart of the home, distinguished by custom white cabinetry with bespoke details like integrated spice pullouts, pristine white quartz countertops, and a suite of stainless steel appliances. A flexible main-floor room offers a quiet space for a study or den. The upper level provides a thoughtful separation of living spaces, with four bedrooms arranged on a single floor. The private primary suite is a generous retreat, complete with a spacious bath and a well-proportioned walk-in closet. An additional loft area offers a quiet nook for work or reading. The unfinished walkout lower level presents a canvas for future personalization, with direct access to the secluded backyard. This home offers a rare blend of contemporary interior finishes and profound natural privacy, creating a complete and tranquil living experience.</p>
+                <div class="listing-column ai-v3-listing">
+                    <h3><span class="column-icon">3</span>V3 Full Data Listing</h3>
+                    <div class="listing-content">
+                        <p>This property on Legends Club Drive isn't just a house on a large lot; it's a fully realized private compound. The experience here is anchored by the heated, in-ground pool and the expansive patio surrounding it. This entire outdoor area is designed as the focal point for summer, creating a genuine resort-like atmosphere on your own land. The 1.88-acre lot, with its medium tree coverage, provides a substantial buffer and a sense of seclusion.</p>
+                        <p>Inside, the home's 5,015 square feet offer a level of scale that accommodates nearly any situation. With six bedrooms and four bathrooms, there is ample space for a large family and visitors. Three separate fireplaces create distinct gathering spots throughout the home, from the main living area to more private settings. The main level is designed for flow, with the 16x13 kitchen and its center island acting as a functional hub. An adjoining sunroom provides a bright, four-season space to overlook the grounds.</p>
+                        <p>The finished walkout basement is a key component of the home's design. It serves as a direct gateway to the patio and pool, making it a natural hub for hosting. It's a versatile space that adds another full dimension to the home's living capacity. A three-car garage and a dedicated 11x7 mudroom handle the practicalities of daily life. This is a home built for hosting, for family, and for creating a self-contained lifestyle within a premier golf community.</p>
+                    </div>
+                    <div class="word-count">Word count: 235</div>
                 </div>
             </div>
         </div>
 
     </div>
-
 </body>
 </html>
